@@ -4,13 +4,7 @@ import { betterAuth } from 'better-auth'
 import { createError } from 'h3'
 import { useLatestAuthInstance } from '../internal/useLatestAuthInstance'
 
-export function createBetterAuth<Options extends BetterAuthOptions>(option: Options & Record<never, never>): {
-  auth: ReturnType<typeof BetterAuthFactory<Options>>
-  useAuthServer: typeof useAuthServer
-  requireSession: typeof requireSession
-  useUserSession: typeof useUserSession
-  navigateSocialSignIn: typeof navigateSocialSignIn
-} {
+export function createBetterAuth<Options extends BetterAuthOptions>(option: Options & Record<never, never>) {
   const auth = BetterAuthFactory(option)
   function useAuthServer(event: H3Event) {
     return {
