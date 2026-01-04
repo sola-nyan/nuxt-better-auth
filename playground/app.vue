@@ -1,5 +1,6 @@
 <!-- eslint-disable no-console -->
 <script setup lang="ts">
+import { useFetch } from '#app'
 import { useAuthClient } from './app/utils/authClient'
 
 const authClient = await useAuthClient()

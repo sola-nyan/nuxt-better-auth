@@ -22,7 +22,7 @@ jobs:
       - run: npm i -g --force corepack@latest && corepack enable
 
       - name: Install dependencies
-        run: npx nypm@latest i
+        run: npx npm@latest i
 
       - name: Lint
         run: npm run lint
