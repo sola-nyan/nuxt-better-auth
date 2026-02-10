@@ -1,6 +1,6 @@
 {
   "name": "@sola-nyan/nuxt-better-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nuxt module for better-auth",
   "repository": {
     "type": "git",
@@ -37,22 +37,22 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.2.2"
+    "@nuxt/kit": "^4.3.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.1.1",
-    "@nuxt/eslint": "^1.12.1",
+    "@nuxt/eslint": "^1.15.1",
     "@nuxt/module-builder": "^1.0.2",
-    "@nuxt/schema": "^4.2.2",
-    "@types/node": "^25.0.2",
-    "better-auth": "^1.4.10",
+    "@nuxt/schema": "^4.3.1",
+    "@types/node": "^25.2.2",
+    "better-auth": "^1.4.18",
     "changelogen": "^0.6.2",
-    "eslint": "^9.39.2",
-    "nuxt": "^4.2.2",
+    "eslint": "^10.0.0",
+    "nuxt": "^4.3.1",
     "typescript": "latest",
-    "vue-tsc": "^3.1.8"
+    "vue-tsc": "^3.2.4"
   },
   "peerDependencies": {
-    "better-auth": "^1.4.10"
+    "better-auth": "^1.4.18"
   }
 }

@@ -1,8 +1,9 @@
-import type { BetterAuthOptions } from 'better-auth'
-import type { createBetterAuth } from '../utils/createBetterAuth'
+import type { Auth, BetterAuthOptions } from 'better-auth'
+import type { createHelper } from '../utils/provideBetterAuthInstance'
 
 const $singleton = {
-  result: undefined as undefined | ReturnType<typeof createBetterAuth<BetterAuthOptions>>,
+  auth: undefined as undefined | Auth<BetterAuthOptions>,
+  helper: undefined as undefined | ReturnType<typeof createHelper>
 }
 
 export function useLatestAuthInstance() {

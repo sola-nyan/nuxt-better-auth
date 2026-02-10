@@ -1,8 +1,24 @@
 import { addImportsDir, addServerHandler, addServerImports, createResolver, defineNuxtModule } from '@nuxt/kit'
+import type { SocialProviders } from 'better-auth'
 
+interface PageRouteOption {
+  path: string
+  auth: boolean
+  provider: keyof SocialProviders
+  callbackURL: string
+}
+
+interface APIRouteOption {
+  path: string
+  auth: boolean
+}
 export interface ModuleOptions {
   enable: boolean
-  protectPathRoot: string | string[]
+  routeGuard: {
+    pages: PageRouteOption[],
+    apis: APIRouteOption[]
+
+  }
 }
 
 const MODULE_NAME = '@sola-nyan/nuxt-better-auth'
@@ -24,8 +40,8 @@ export default defineNuxtModule<ModuleOptions>({
      * Inject Server Util : createBetterAuth
      */
     addServerImports([{
-      from: resolver.resolve('./runtime/server/utils/createBetterAuth'),
-      name: 'createBetterAuth',
+      from: resolver.resolve('./runtime/server/utils/provideBetterAuthInstance'),
+      name: 'provideBetterAuthInstance',
     }])
 
     /**
@@ -33,12 +49,25 @@ export default defineNuxtModule<ModuleOptions>({
      */
     addImportsDir(resolver.resolve('./runtime/utils'))
 
-    /**
-     * Inject Server Handler
-     */
-    addServerHandler({
-      handler: resolver.resolve('./runtime/server/handler/auth'),
-      route: '/api/auth/**',
-    })
+
+    if (_options.enable) {
+      /**
+       * Inject Server Handler
+       */
+      addServerHandler({
+        handler: resolver.resolve('./runtime/server/handler/auth'),
+        route: '/api/auth/**',
+      })
+    
+      // /**
+      //  * Inject Server Middleware
+      //  */
+      // addServerHandler({
+      //   handler: resolver.resolve('./runtime/server/middleware/routeGuard'),
+      //   middleware: true
+      // })
+    }   
+    
+    
   },
 })

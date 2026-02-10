@@ -1,10 +1,4 @@
 import { defineEventHandler } from 'h3'
-import {
-  navigateSocialSignIn,
-  requireAdminSession,
-  requireSession,
-  useUserSession,
-} from '../utils/authServerClient'
 
 export default defineEventHandler(async (event) => {
   // API系に対する認証
