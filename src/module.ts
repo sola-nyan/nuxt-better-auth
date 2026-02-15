@@ -14,7 +14,7 @@ const MODULE_NAME = '@sola-nyan/nuxt-better-auth'
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: MODULE_NAME,
-    configKey: 'better-auth',
+    configKey: 'betterAuth',
     compatibility: {
       nuxt: '^4.0.0',
     },
