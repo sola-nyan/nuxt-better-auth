@@ -2,7 +2,6 @@ import { type Auth, type BetterAuthOptions, type InferSession, type InferUser } 
 import type { H3Event } from 'h3'
 import { createError } from 'h3'
 import { useLatestAuthInstance } from '../internal/useLatestAuthInstance'
-import { useEvent } from '#build/types/nitro-imports'
 interface NavigateOption { provider: string, callbackURL: string }
 export function provideBetterAuthInstance<T extends Auth<X>, X extends BetterAuthOptions>(auth: T) {
   const helper = createHelper(auth)
@@ -29,7 +28,7 @@ interface BetterAuthInstanceLikeFabricatedTypeForCreateHelper {
 }
 
 export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCreateHelper>(auth: T) => {
-  async function requireSession(event: H3Event = useEvent()) {
+  async function requireSession(event: H3Event) {
     const session = await auth.api.getSession({
       headers: event.headers,
     })
@@ -42,7 +41,7 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
     return session as T["$Infer"]["Session"]
   }
 
-  async function useUserSession(event: H3Event = useEvent()) {
+  async function useUserSession(event: H3Event) {
     const res = await auth.api.getSession({
       headers: event.headers,
     })
@@ -52,7 +51,7 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
     }
   }
 
-  async function requireUserSession(event: H3Event = useEvent()) {
+  async function requireUserSession(event: H3Event) {
     const res = await auth.api.getSession({
       headers: event.headers,
     })
@@ -70,7 +69,7 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
 
   async function navigateSocialSignIn(
     options: NavigateOption, 
-    event: H3Event = useEvent()
+    event: H3Event
   ) {
     const res = await auth.api!.signInSocial!({
       body: {
@@ -103,7 +102,7 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
     })
   }
 
-  function useAuthServer(event: H3Event = useEvent()) {
+  function useAuthServer(event: H3Event) {
     return {
       requireSession: async () => { return await requireSession(event) },
       useUserSession: async () => { return await useUserSession(event) },
