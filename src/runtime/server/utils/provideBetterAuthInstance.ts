@@ -5,7 +5,7 @@ import { useLatestAuthInstance } from '../internal/useLatestAuthInstance'
 import { useRequestEvent } from "#imports"
 interface NavigateOption { provider: string, callbackURL: string }
 
-export function provideBetterAuthInstance(auth: Auth<BetterAuthOptions>) {
+export function provideBetterAuthInstance<T extends BetterAuthOptions>(auth: Auth<T>) {
   const helper = createHelper(auth)
   const ins = useLatestAuthInstance()
   ins.auth = auth
