@@ -1,5 +1,4 @@
 import { betterAuth } from 'better-auth'
-import type { H3Event } from 'h3'
 
 if (!process.env.AUTH_PROVIDERS_ENTRA_CLIENT_ID)
   throw new Error('NO ENV SET: AUTH_PROVIDERS_ENTRA_CLIENT_ID')
