@@ -35,13 +35,9 @@ export const auth = betterAuth({
   },
 })
 
-export async function requireAdminSession(event: H3Event) {
-  const ses = await requireSession(event)
-  if (!ses.user.admin) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-    })
-  }
-  return ses
-}
+export const { 
+  useAuthServer,
+  requireSession,
+  requireUserSession,
+  useUserSession
+} = provideBetterAuthInstance(auth)

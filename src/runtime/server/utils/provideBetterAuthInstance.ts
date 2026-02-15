@@ -1,9 +1,8 @@
-import { microsoft, type Auth, type BetterAuthOptions, type SocialProviders } from 'better-auth'
+import { type Auth, type BetterAuthOptions } from 'better-auth'
 import type { H3Event } from 'h3'
 import { createError } from 'h3'
 import { useLatestAuthInstance } from '../internal/useLatestAuthInstance'
-import { useEvent } from '#build/types/nitro-imports'
-
+import { useRequestEvent } from "#imports"
 interface NavigateOption { provider: string, callbackURL: string }
 
 export function provideBetterAuthInstance(auth: Auth<BetterAuthOptions>) {
@@ -11,10 +10,11 @@ export function provideBetterAuthInstance(auth: Auth<BetterAuthOptions>) {
   const ins = useLatestAuthInstance()
   ins.auth = auth
   ins.helper = helper
+  return helper
 }  
 
 export function createHelper(auth: Auth<BetterAuthOptions>) {
-  async function requireSession(event: H3Event = useEvent()) {
+  async function requireSession(event: H3Event = useRequestEvent()!) {
     const session = await auth.api.getSession({
       headers: event.headers,
     })
@@ -27,7 +27,7 @@ export function createHelper(auth: Auth<BetterAuthOptions>) {
     return session
   }
 
-  async function useUserSession(event: H3Event = useEvent()) {
+  async function useUserSession(event: H3Event = useRequestEvent()!) {
     const res = await auth.api.getSession({
       headers: event.headers,
     })
@@ -37,7 +37,7 @@ export function createHelper(auth: Auth<BetterAuthOptions>) {
     }
   }
 
-  async function requireUserSession(event: H3Event = useEvent()) {
+  async function requireUserSession(event: H3Event = useRequestEvent()!) {
     const res = await auth.api.getSession({
       headers: event.headers,
     })
@@ -55,7 +55,7 @@ export function createHelper(auth: Auth<BetterAuthOptions>) {
 
   async function navigateSocialSignIn(
     options: NavigateOption, 
-    event: H3Event = useEvent()
+    event: H3Event
   ) {
     const res = await auth.api.signInSocial({
       body: {
@@ -88,11 +88,12 @@ export function createHelper(auth: Auth<BetterAuthOptions>) {
     })
   }
 
-  function useAuthServer(event: H3Event = useEvent()) {
+  function useAuthServer(event: H3Event = useRequestEvent()!) {
     return {
       auth,
       requireSession: async () => { return await requireSession(event) },
       useUserSession: async () => { return await useUserSession(event) },
+      requireUserSession: async () => { return await requireUserSession(event) },
       navigateSocialSignIn: async (opt: NavigateOption) => { return await navigateSocialSignIn(opt, event) },
     }
   }
