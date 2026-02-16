@@ -48,7 +48,7 @@ export default defineNuxtModule<ModuleOptions>({
        */
       addServerHandler({
         handler: resolver.resolve('./runtime/server/handler/auth'),
-        route: '/api/auth/',
+        route: _options.handler.route,
       })
     }
   },

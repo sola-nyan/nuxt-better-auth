@@ -1,6 +1,6 @@
 {
   "name": "@sola-nyan/nuxt-better-auth",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Nuxt module for better-auth",
   "repository": {
     "type": "git",
