@@ -1,9 +1,10 @@
-import { type Auth, type BetterAuthOptions, type InferSession, type InferUser } from 'better-auth'
+import { betterAuth, type Auth, type BetterAuthOptions } from 'better-auth'
 import type { H3Event } from 'h3'
 import { createError } from 'h3'
 import { useLatestAuthInstance } from '../internal/useLatestAuthInstance'
 interface NavigateOption { provider: string, callbackURL: string }
-export function provideBetterAuthInstance<T extends Auth<X>, X extends BetterAuthOptions>(auth: T) {
+
+export function provideBetterAuthInstance<O extends BetterAuthOptions>(auth: Auth<O>) {
   const helper = createHelper(auth)
   const ins = useLatestAuthInstance()
   ins.auth = auth
@@ -17,7 +18,7 @@ export function provideBetterAuthInstance<T extends Auth<X>, X extends BetterAut
 interface BetterAuthInstanceLikeFabricatedTypeForCreateHelper {
   api: {
     getSession: (options: { headers: Headers }) => Promise<any>
-    signInSocial?: (options: any ) => Promise<any>
+    signInSocial: (options: any ) => Promise<any>
   }
   $Infer: {
     Session: {
@@ -27,7 +28,9 @@ interface BetterAuthInstanceLikeFabricatedTypeForCreateHelper {
   }
 }
 
-export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCreateHelper>(auth: T) => {
+type signInSocialAPI = ReturnType<typeof betterAuth<BetterAuthOptions>>["api"]["signInSocial"]
+
+export const createHelper = <O extends BetterAuthOptions>(auth: Auth<O>) => {
   async function requireSession(event: H3Event) {
     const session = await auth.api.getSession({
       headers: event.headers,
@@ -38,7 +41,7 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
         statusMessage: 'Unauthorized',
       })
     }
-    return session as T["$Infer"]["Session"]
+    return session as (typeof auth)["$Infer"]["Session"]
   }
 
   async function useUserSession(event: H3Event) {
@@ -46,8 +49,8 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
       headers: event.headers,
     })
     return {
-      user: res?.user as T["$Infer"]["Session"]["user"],
-      session: res?.session as T["$Infer"]["Session"],
+      user: res?.user as (typeof auth)["$Infer"]["Session"]["user"],
+      session: res?.session as (typeof auth)["$Infer"]["Session"]["session"],
     }
   }
 
@@ -62,8 +65,8 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
       })
     }    
     return {
-      user: res?.user as T["$Infer"]["Session"]["user"],
-      session: res?.session as T["$Infer"]["Session"],
+      user: res?.user as (typeof auth)["$Infer"]["Session"]["user"],
+      session: res?.session as (typeof auth)["$Infer"]["Session"]["session"],
     }
   }
 
@@ -71,11 +74,13 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
     options: NavigateOption, 
     event: H3Event
   ) {
-    const res = await auth.api!.signInSocial!({
+    const _auth = auth as unknown as BetterAuthInstanceLikeFabricatedTypeForCreateHelper
+    const api = _auth.api.signInSocial as signInSocialAPI
+    const res = await api({
       body: {
         provider: options.provider,
         callbackURL: options.callbackURL,
-      },
+      },      
       asResponse: true,
       headers: event.headers,
     })
@@ -104,7 +109,6 @@ export const createHelper = <T extends BetterAuthInstanceLikeFabricatedTypeForCr
 
   function useAuthServer(event: H3Event) {
     return {
-      requireSession: async () => { return await requireSession(event) },
       useUserSession: async () => { return await useUserSession(event) },
       requireUserSession: async () => { return await requireUserSession(event) },
       navigateSocialSignIn: async (opt: NavigateOption) => { return await navigateSocialSignIn(opt, event) },

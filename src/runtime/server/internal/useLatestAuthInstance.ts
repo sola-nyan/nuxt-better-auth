@@ -1,8 +1,8 @@
-import type { Auth, BetterAuthOptions } from 'better-auth'
+import type { Auth, betterAuth, BetterAuthOptions } from 'better-auth'
 import type { createHelper } from '../utils/provideBetterAuthInstance'
 
 const $singleton = {
-  auth: undefined as undefined | Auth<BetterAuthOptions>,
+  auth: undefined as undefined | Auth<any>,
   helper: undefined as undefined | ReturnType<typeof createHelper>
 }
 

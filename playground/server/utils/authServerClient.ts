@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth'
+import { Auth, betterAuth, BetterAuthOptions } from 'better-auth'
 
 if (!process.env.AUTH_PROVIDERS_ENTRA_CLIENT_ID)
   throw new Error('NO ENV SET: AUTH_PROVIDERS_ENTRA_CLIENT_ID')
